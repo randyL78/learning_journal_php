@@ -1,35 +1,57 @@
 <?php 
+
+// database connnection and functions file
+include('inc/functions.php');
+
+// Set the title in the HTML head
+$pageTitle = 'MyJournal | Entry Details';
+
+// Place header before call to get_entry so that
+// it displays regardless of whether entry is found
 include('inc/header.php');
+
+// check if an id has been passed, if so get entry details
+if (isset($_GET['id'])) {
+    $entry = get_entry(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
+} else {
+    echo '<h2>No Journal Entry Selected</h2>';
+    die();
+}
+
+if ($entry == false) {
+    echo '<h2>Journal Entry Not Found</h2>';
+    die();
+}
+
+var_dump($entry);
 ?>
 <section>
     <div class="container">
         <div class="entry-list single">
             <article>
-                <h1>The best day I’ve ever had</h1>
+                <h1><?php echo $entry['title'] ?></h1>
                 <time datetime="2016-01-31">January 31, 2016</time>
                 <div class="entry">
                     <h3>Time Spent: </h3>
-                    <p>15 Hours</p>
+                    <p><?php echo ucwords($entry['time_spent']) ?></p>
                 </div>
                 <div class="entry">
                     <h3>What I Learned:</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut rhoncus felis, vel tincidunt neque.</p>
-                    <p>Cras egestas ac ipsum in posuere. Fusce suscipit, libero id malesuada placerat, orci velit semper metus, quis pulvinar sem nunc vel augue. In ornare tempor metus, sit amet congue justo porta et. Etiam pretium, sapien non fermentum consequat, <a href="">dolor augue</a> gravida lacus, non accumsan. Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien.</p>
+                    <p>
+                    <?php echo $entry['learned'] ?>
+                    </p>
                 </div>
                 <div class="entry">
                     <h3>Resources to Remember:</h3>
                     <ul>
                         <li><a href="">Lorem ipsum dolor sit amet</a></li>
-                        <li><a href="">Cras accumsan cursus ante, non dapibus tempor</a></li>
-                        <li>Nunc ut rhoncus felis, vel tincidunt neque</li>
-                        <li><a href="">Ipsum dolor sit amet</a></li>
                     </ul>
                 </div>
             </article>
         </div>
     </div>
     <div class="edit">
-        <p><a href="edit.php">Edit Entry</a></p>
+        <p><a href="edit.php?id=<?php echo $entry['id'] ?>">Edit Entry</a></p>
     </div>
 </section>
 <?php 

@@ -12,16 +12,22 @@ include('inc/header.php');
 <section>
     <div class="container">
         <div class="entry-list">
+
         <?php 
-        foreach($entries as $entry) {
+        if (empty($entries)) {
+            echo '<h2>No Journal entries found</h2>';
+            echo '<a href="new.php">Let\'s Create One!</a>';
+        } else {
+            foreach($entries as $entry) {
 
-            // convert date from yyyy-mm-dd format to full word representation.
-            $date = date('F j, Y', strtotime($entry['date']));
+                // convert date from yyyy-mm-dd format to full word representation.
+                $date = date('F j, Y', strtotime($entry['date']));
 
-            echo '<article>';
-            echo '<h2><a href="detail.php?id=' . $entry['id'] .  '">' . $entry['title'] . '</a></h2>';
-            echo '<time datetime=' . $entry['date'] .  '>' . $date .  '</time>';
-            echo '</article>';
+                echo '<article>';
+                echo '<h2><a href="detail.php?id=' . $entry['id'] .  '">' . $entry['title'] . '</a></h2>';
+                echo '<time datetime=' . $entry['date'] .  '>' . $date .  '</time>';
+                echo '</article>';
+            }
         }
         ?>
         </div>
