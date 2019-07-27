@@ -22,15 +22,19 @@ if ($entry == false) {
     echo '<h2>Journal Entry Not Found</h2>';
     die();
 }
-
-var_dump($entry);
 ?>
 <section>
     <div class="container">
         <div class="entry-list single">
             <article>
                 <h1><?php echo $entry['title'] ?></h1>
-                <time datetime="2016-01-31">January 31, 2016</time>
+                <?php 
+                 // convert date from yyyy-mm-dd format to full word representation.
+                 $date = date('F j, Y', strtotime($entry['date']));
+
+                 echo '<time datetime="' . $entry['date'] . '">' . $date . '</time>';
+                ?>
+                
                 <div class="entry">
                     <h3>Time Spent: </h3>
                     <p><?php echo ucwords($entry['time_spent']) ?></p>
@@ -51,7 +55,7 @@ var_dump($entry);
         </div>
     </div>
     <div class="edit">
-        <p><a href="edit.php?id=<?php echo $entry['id'] ?>">Edit Entry</a></p>
+        <p><a href="entry.php?id=<?php echo $entry['id'] ?>">Edit Entry</a></p>
     </div>
 </section>
 <?php 
