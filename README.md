@@ -13,11 +13,11 @@ Third project in the PHP Techdegree
 ### Meets
 
 - [X] Create a PDO connection to the SQLite (database.db) file within the inc folder.
-- [ ] Use prepared statements to add/edit/delete journal entries in the database.
-- [ ] Create “add/edit” view for the "entry" page that allows the user to add or edit journal entries with the following fields: title, date, time_spent, learned, and resources. Each journal entry should have a unique primary key.
+- [X] Use prepared statements to add/edit/delete journal entries in the database.
+- [X] Create “add/edit” view for the "entry" page that allows the user to add or edit journal entries with the following fields: title, date, time_spent, learned, and resources. Each journal entry should have a unique primary key.
 - [X] Create "list" view for the "index" page. The list view contains a list of journal entries, which displays Title and Date of each Entry. The title should be hyperlinked to the detail page for each journal entry. Entries should be sorted by date. Include a link to add an entry.
-- [ ] Create "details" view with the entries displaying the journal entry with all fields: title, date, time_spent, learned, and resources. Include a link to edit the entry.
-- [ ] Add the ability to delete a journal entry.
+- [X] Create "details" view with the entries displaying the journal entry with all fields: title, date, time_spent, learned, and resources. Include a link to edit the entry.
+- [X] Add the ability to delete a journal entry.
 - [X] Use the supplied HTML/CSS to build and style your pages.Use CSS to style headings, font colors, journal entry container colors, body colors.
 
 ### Exceeds

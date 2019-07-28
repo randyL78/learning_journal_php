@@ -56,6 +56,11 @@ footer {
 	border: 2px solid #e1e1e1;
 	color: #404a49;
 }
+.button.button-warning {
+	background: #FFF;
+	border: 2px solid #933;
+	color: #933;
+}
 .button.icon-right {
 	padding-right: 30px;
 	top: -10px;
@@ -183,7 +188,18 @@ ul li a {
 }
 
 .error {
-	color: #833;
+	color: #933;
+}
+
+.link {
+	border: none;
+	border-bottom: 2px solid #933;
+	padding: 0;
+	color: #933;
+	text-decoration: none;
+	font-weight: 400;
+	text-transform: uppercase;
+	font-size: 18px;
 }
 
 

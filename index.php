@@ -26,6 +26,10 @@ include('inc/header.php');
                 echo '<article>';
                 echo '<h2><a href="detail.php?id=' . $entry['id'] .  '">' . $entry['title'] . '</a></h2>';
                 echo '<time datetime=' . $entry['date'] .  '>' . $date .  '</time>';
+                echo '<form action="entry.php" method="post">';
+                echo '<input type="hidden" name="id" value="' . $entry['id']. '" />';
+                echo '<input type="submit" value="Delete" name="delete" class="button button-warning" />';
+                echo '</form>';
                 echo '</article>';
             }
         }

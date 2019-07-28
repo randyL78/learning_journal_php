@@ -84,3 +84,22 @@ function add_entry($title, $date, $time_spent, $learned, $resources = null, $id 
 
   return true;
 }
+
+/**
+ * function to delete an entry
+ * @param $id Integer representing the entry's id
+ * @return bool Successfully deleted entry
+ */
+function delete_entry($id) {
+  include('connection.php');
+  $sql = 'DELETE FROM entries WHERE id = ?';
+
+  try {
+    $results = $db->prepare($sql);
+    $results->bindValue(1, $id, PDO::PARAM_INT);
+    $results->execute();
+  } catch(Exception $ex) {
+    return false;
+  }
+  return true;
+}
