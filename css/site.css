@@ -246,13 +246,25 @@ input[type=submit] {
 }
 
 
+/* ==========================================================================
+   Tag Styles
+   ========================================================================== */
 
+.tags {
+	list-style-type: none;
+}
 
+.tags li {
+	display: inline;
+}
 
+.tags li::before {
+	content: ' #';
+}
 
-
-
-
+.tags a {
+	border: none;
+}
 
 
 

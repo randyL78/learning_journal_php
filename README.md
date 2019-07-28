@@ -23,5 +23,5 @@ Third project in the PHP Techdegree
 ### Exceeds
 
 - [ ] Add tags table and link tags to journal entries in the database. You'll want to download a SQLite Browser to modify the database.
-- [ ] Add tags to journal entries on the listing page and allow the tags to be links to a list of entries, filtered by specific tags.
-- [ ] Add tags to the details page, with link to a list of entries, filtered by specific tags
+- [X] Add tags to journal entries on the listing page and allow the tags to be links to a list of entries, filtered by specific tags.
+- [X] Add tags to the details page, with link to a list of entries, filtered by specific tags

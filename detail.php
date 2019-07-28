@@ -13,6 +13,9 @@ include('inc/header.php');
 // check if an id has been passed, if so get entry details
 if (isset($_GET['id'])) {
     $entry = get_entry(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
+
+    // check if entry has tags
+    $tags = get_entry_tags($entry['id']);
 } else {
     echo '<h2>No Journal Entry Selected</h2>';
     die();
@@ -45,32 +48,44 @@ if ($entry == false) {
           <?php echo $entry['learned'] ?>
           </p>
         </div>
-        <div class="entry">
+
         <?php 
         // only display resource area if user saved resources
         if(!empty($entry['resources'])) {
-            echo '<h3>Resources to Remember:</h3>';
-            echo '<ul>';
-            
-              // loop through each line of resources string
-              foreach(explode(PHP_EOL, $entry['resources']) as $resource) {
-                echo '<li>'; 
-                $sub_items = (explode(',', $resource));
+          echo '<div class="entry">';
+          echo '<h3>Resources to Remember:</h3>';
+          echo '<ul>';
+          
+          // loop through each line of resources string
+          foreach(explode(PHP_EOL, $entry['resources']) as $resource) {
+            echo '<li>'; 
+            $sub_items = (explode(',', $resource));
 
-                // if user used correct format, display as link
-                // otherwise just write out the whole line as text
-                if(count($sub_items) > 1) {
-                  echo '<a href="http://' . $sub_items[0] . '" target="_blank" >' . $sub_items[1] . '</a>';
-                } else {
-                  echo $sub_items[0];
-                }
-                echo '</li>';
-              } 
+            // if user used correct format, display as link
+            // otherwise just write out the whole line as text
+            if(count($sub_items) > 1) {
+              echo '<a href="http://' . $sub_items[0] . '" target="_blank" >' . $sub_items[1] . '</a>';
+            } else {
+              echo $sub_items[0];
+            }
+            echo '</li>';
+          } 
+          echo '</ul>';   
+          echo '</div>';                     
+        }
 
-            echo '</ul>';                        
+        // only display tags area if user saved tags
+        if(!empty($tags)) {
+          echo '<div class="entry">';
+          echo '<h3>Tags:</h3>';
+          echo '<ul class="tags">';
+          foreach($tags as $tag) {
+            echo '<li><a href="index.php?tag=' . $tag['title'] . '" >' . $tag['title'] . '</a></li>';
+          }
+          echo '</ul>';   
+          echo '</div>';                     
         }
         ?>
-        </div>
       </article>
     </div>
   </div>
