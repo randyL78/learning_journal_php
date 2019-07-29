@@ -14,9 +14,9 @@
  * @param int $id optional for updating entry
  * @return bool Entry was successfully created or updated
  */
-function add_entry($title, $date, $time_spent, $learned, $resources = null, $id = null) {
+function add_entry($title, $date, $time_spent, $learned, $resources = null, $tags = null, $id = null) {
   include('connection.php');
-  var_dump($learned);
+ 
   if ($id) {
     
     $sql = 'UPDATE entries SET title = ?, date = ?, time_spent = ?, learned = ?, resources = ? WHERE id = ?';
@@ -37,6 +37,13 @@ function add_entry($title, $date, $time_spent, $learned, $resources = null, $id 
     }
 
     $results->execute();
+    if (empty($id)) {
+      $id = get_entry_id($title);
+    }
+   
+    if (!empty($tags)) {
+      link_tags($id, $tags);
+    }
     
   } catch(Exception $ex) {
     echo $ex->getMessage();
@@ -83,6 +90,31 @@ function get_all_entries() {
 }
 
 /**
+ * function to get an entry's's id
+ * @param string $title The title of the entry
+ * @return int The journal entry's id
+ */
+function get_entry_id($title) {
+  include('connection.php');
+
+  $sql = 'SELECT id FROM entries WHERE title=?';
+
+  try {
+    $results = $db->prepare($sql);
+    $results->bindValue(1, $title);
+    $results->execute();
+
+    $id =$results->fetch(PDO::FETCH_ASSOC) ;
+
+    return $id['id'];
+  } catch (Exception $ex) {
+    echo $ex->get_message();
+    return false;
+  }
+
+}
+
+/**
  * function to get the details of a single journal entry
  * @param id an integer based database id
  * @return mixed an associative and indexed arrays of joournal details
@@ -111,6 +143,68 @@ function get_entry($id) {
 /* ==========================================================
  *        tags table functions
  * ========================================================== */
+/**
+ * function to add or update a tag
+ * @param string $title the name of the tag
+ * @param int optonal $id the id of the tag to update
+ * @return bool successfully update or create tag
+ */
+function add_tag($title, $id = null) {
+  include('connection.php');
+
+  
+  if (empty($id)) {
+    $sql = 'INSERT INTO tags(title) VALUES(?)';
+  } else {
+    $sql = 'UPDATE tags SET title = ? WHERE id = ?';
+  }
+
+  try {
+    $results = $db->prepare($sql);
+    $results->bindValue(1, $title, PDO::PARAM_STR);
+    if($id) {
+      $results->bindValue(2, $id, PDO::PARAM_INT);
+    }
+
+    return $results->execute();
+    
+  } catch (Exception $ex) {
+    // echo $ex->get_message();
+    return false;
+  }
+}
+
+/**
+ * function to delete a tag from the database
+ * @param in $id the id of the tag to delete
+ * @return bool successfully deleted tag
+ */
+function delete_tag($id) {
+  include('connection.php');
+  $sql = 'DELETE FROM tags WHERE id = ?';
+
+  try {
+    $results = $db->prepare($sql);
+    $results->bindValue(1, $id, PDO::PARAM_INT);
+    $results->execute();
+  } catch(Exception $ex) {
+    return false;
+  }
+
+  $sql = 'DELETE FROM entries_tags WHERE tag_id = ?';
+
+  try {
+    $results = $db->prepare($sql);
+    $results->bindValue(1, $id, PDO::PARAM_INT);
+    $results->execute();
+  } catch(Exception $ex) {
+    return false;
+  }
+
+  return true;
+}
+
+
 /**
  * function to get all tags from a specific journal entry
  * @param int $entry_id The id of the journal entry
@@ -170,3 +264,56 @@ function get_entries_by_tag($tag_title) {
     return false;
   }
 }
+
+/**
+ * function to get all tags
+ * @return mixed an associative array of tags
+ */
+function get_tags() {
+  include('connection.php');
+
+  try {
+    $results = $db->query('SELECT * FROM tags ORDER BY title ASC');
+  } catch(Exception $ex) {
+    echo $ex->get_message();
+    return false;
+  }
+  return $results->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * function to link tags to a specific journal entry
+ * @param int $entry_id The current journal entry's id
+ * @param mixed $tags Indexed array of tag id's
+ * @return bool Tags successfully linked
+ */
+function link_tags($entry_id, $tags) {
+  include('connection.php');
+
+  // first delete existing links
+  try {
+    $sql = 'DELETE FROM entries_tags WHERE entry_id = ?';
+
+    $results = $db->prepare($sql);
+    $results->bindValue(1, $entry_id, PDO::PARAM_INT);
+    $results->execute();
+  } catch(Exception $ex) {
+    echo $ex->get_message();
+  }
+
+  try {
+    foreach ($tags as $tag) {
+      $sql = 'INSERT INTO entries_tags("entry_id", "tag_id") VALUES(?, ?)';
+
+      $results = $db->prepare($sql);
+      $results->bindValue(1, $entry_id, PDO::PARAM_INT);
+      $results->bindValue(2, $tag, PDO::PARAM_INT);
+      $results->execute();
+
+    }
+  } catch (Exception $ex) {
+    echo $ex->get_message();
+  }
+
+  return true;
+ }

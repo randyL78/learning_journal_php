@@ -12,12 +12,14 @@ $date = "";
 $time_spent = "";
 $learned = "";
 $resources = "";
+$entry_tags = [];
 
 // check if an entry id was passed to the page
 if(isset($_GET['id'])) {
   list($id, $title, $date, $time_spent, $learned, $resources) = 
     get_entry(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
   $pageTitle = 'MyJournal | Edit Entry';
+  $entry_tags = get_entry_tags($id);
 }
 
 // go ahead and add in the header in case there are errors later,
@@ -42,6 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $time_spent = trim(filter_input(INPUT_POST, 'timeSpent', FILTER_SANITIZE_STRING));
   $learned = trim(filter_input(INPUT_POST, 'whatILearned', FILTER_SANITIZE_STRING));
   $resources = trim(filter_input(INPUT_POST, 'resourcesToRemember', FILTER_SANITIZE_STRING));
+  $updated_tags="";
+  if (isset($_POST['tags'])) {
+    $updated_tags = $_POST['tags'];
+  }
+  
+
 
   // validating date only for if the input type changes later. 
   // Date type inputs automatically have consistent date properties.
@@ -58,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ) {
       $error_message = 'Invalid Date';
   } else { 
-    if(add_entry($title, $date, $time_spent, $learned, $resources, $id)) {
+    if(add_entry($title, $date, $time_spent, $learned, $resources, $updated_tags, $id)) {
       header('Location: index.php');
       exit();
     } else {
@@ -67,14 +75,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
+// get all available tags
+$tags = get_tags();
+
 
 
 ?>
 <section>
   <div class="container">
     <div class="edit-entry">
-      <h2>Edit Entry</h2>
       <?php 
+      if(empty($id)) {
+        echo '<h2>New Entry</h2>';
+      } else {
+        echo '<h2>Edit Entry</h2>';
+      }
+ 
       if(isset($error_message)) {
         echo '<p class="error" >' . $error_message . '</p>';
       }
@@ -91,8 +107,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php 
         ?>
         <label for="resources-to-remember">Resources to Remember</label>
-        <textarea id="resources-to-remember" rows="5" placeholder="Please use format:&#13;&#10;web.link1, web site name 1&#13;&#10;web.link2, web site name 2" name="resourcesToRemember"><?php echo $resources; ?></textarea>
+        <textarea id="resources-to-remember" rows="5" placeholder="Please use format:&#13;&#10;www.web.link1, web site name 1&#13;&#10;www.web.link2, web site name 2" name="resourcesToRemember"><?php echo $resources; ?></textarea>
+        <label>Tags</label>
         <?php
+        // loop through the available tags and make them checkboxes
+        foreach($tags as $tag) {
+          echo '<label><input type="checkbox" ';
+          echo in_array($tag, $entry_tags) ? "checked" : null;
+          echo ' name="tags[]" value="' . $tag['id'] . '" />' . $tag['title'] . '</label>';
+        }
+        // store the id in a hidden field in edit mode
         if(!empty($id)) {
           echo '<input type="hidden" name="id" value="' . $id . '" />';
         }

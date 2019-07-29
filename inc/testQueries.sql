@@ -52,3 +52,7 @@ LEFT JOIN tags
 ON tag_id = tags.id
 WHERE tags.title = 'goals'
 ORDER BY date DESC;
+
+-- Select all tags
+SELECT * FROM tags;
+

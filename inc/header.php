@@ -21,7 +21,7 @@
                 <div class="site-header">
                     <a class="logo" href="index.php"><i class="material-icons">library_books</i></a>
                     <a class="button icon-right" href="entry.php"><span>New Entry</span> <i class="material-icons">add</i></a>
-                    <a class="button icon-right button-secondary" href="tag.php"><span>New Tag</span> <i class="material-icons">add</i></a>
+                    <a class="button icon-right button-secondary" href="tag.php"><span>View Tags</span></a>
                 </div>
             </div>
         </header>

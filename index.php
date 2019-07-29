@@ -26,7 +26,7 @@ include('inc/header.php');
         <?php 
         if (empty($entries)) {
             echo '<h2>No Journal entries found</h2>';
-            echo '<a href="new.php">Let\'s Create One!</a>';
+            echo '<a href="entry.php">Let\'s Create One!</a>';
         } else {
             foreach($entries as $entry) {
 
